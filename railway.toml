@@ -1,0 +1,5 @@
+version: "2"
+build:
+  - npm run build
+start:
+  - npm start
