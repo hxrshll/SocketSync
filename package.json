@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "cross-env NODE_OPTIONS=\"--loader ts-node/esm\" ts-node server.mts",
     "dev:socket": "cross-env NODE_OPTIONS=\"--loader ts-node/esm\" ts-node socket-server.mts",
     "build": "next build",
     "start": "cross-env NODE_OPTIONS=\"--loader ts-node/esm\" ts-node server.mts",

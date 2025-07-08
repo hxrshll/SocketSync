@@ -4,14 +4,21 @@ import next from 'next';
 
 const dev = process.env.NODE_ENV !== 'production';
 const hostname = process.env.HOSTNAME || '0.0.0.0';
-const port = parseInt(process.env.PORT || '3001', 10);
+const port = parseInt(process.env.PORT || '3000', 10);
 
 const app = next({ dev, hostname, port });
 const handle = app.getRequestHandler();
 
 app.prepare().then(() => {
     const httpServer = createServer(handle);
-    const io = new Server(httpServer);
+    const io = new Server(httpServer, {
+        cors: {
+            origin: process.env.NODE_ENV === 'production' 
+                ? process.env.NEXT_PUBLIC_SOCKET_URL || '*' 
+                : "http://localhost:3000",
+            methods: ["GET", "POST"]
+        }
+    });
     
     io.on('connection', (socket) => {
         console.log(`A user connected: ${socket.id}`);
