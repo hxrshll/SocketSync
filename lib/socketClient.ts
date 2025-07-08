@@ -3,7 +3,8 @@
 import { io } from 'socket.io-client';
 
 // Use environment variable for server URL, fallback to localhost for development
-const SERVER_URL = process.env.NEXT_PUBLIC_SOCKET_URL || 'http://localhost:3001';
+const SERVER_URL = process.env.NEXT_PUBLIC_SOCKET_URL || 
+  (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000');
 
 export const socket = io(SERVER_URL, {
   transports: ['websocket', 'polling'],

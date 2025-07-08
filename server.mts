@@ -3,19 +3,26 @@ import {Server} from 'socket.io';
 import next from 'next';
 
 const dev = process.env.NODE_ENV !== 'production';
-const hostname = process.env.HOSTNAME || '0.0.0.0';
+const hostname = '0.0.0.0';
 const port = parseInt(process.env.PORT || '3000', 10);
 
 const app = next({ dev, hostname, port });
 const handle = app.getRequestHandler();
 
+console.log(`Starting server in ${dev ? 'development' : 'production'} mode...`);
+
 app.prepare().then(() => {
-    const httpServer = createServer(handle);
+    console.log('Next.js app prepared successfully');
+    
+    const httpServer = createServer((req, res) => {
+        return handle(req, res);
+    });
+    
     const io = new Server(httpServer, {
         cors: {
             origin: process.env.NODE_ENV === 'production' 
-                ? process.env.NEXT_PUBLIC_SOCKET_URL || '*' 
-                : "http://localhost:3000",
+                ? ["https://socketsync.onrender.com"]
+                : ["http://localhost:3000"],
             methods: ["GET", "POST"]
         }
     });
@@ -56,6 +63,10 @@ app.prepare().then(() => {
     });
     
     httpServer.listen(port, hostname, () => {
-        console.log(`Server is running on http://${hostname}:${port}`);
+        console.log(`✅ Server is running on http://${hostname}:${port}`);
+        console.log(`✅ Socket.IO server is ready`);
     });
+}).catch((err) => {
+    console.error('❌ Error starting server:', err);
+    process.exit(1);
 });
