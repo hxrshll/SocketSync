@@ -30,55 +30,63 @@ export default function Home() {
     // Listen for user join events
     socket.on('userJoined', (data: { username: string, room: string }) => {
       console.log('Received userJoined event:', data);
-      const joinMessage: Message = {
-        id: Date.now().toString(),
-        message: `user ${data.username} has joined room ${data.room}`,
-        sender: data.username,
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        isOwnMessage: false,
-        isUserJoined: true
-      };
-      setMessages(prev => [...prev, joinMessage]);
+      if (data && data.username && data.room) {
+        const joinMessage: Message = {
+          id: Date.now().toString(),
+          message: `user ${data.username} has joined room ${data.room}`,
+          sender: data.username,
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          isOwnMessage: false,
+          isUserJoined: true
+        };
+        setMessages(prev => [...prev, joinMessage]);
+      }
     });
 
     // Listen for messages from the server
     socket.on('messages', (data: { message: string, sender: string, room: string }) => {
       console.log('Received messages event:', data);
-      const newMessage: Message = {
-        id: Date.now().toString(),
-        message: data.message,
-        sender: data.sender,
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        isOwnMessage: false, // We'll determine this when we have the current user context
-        isSystemMessage: false
-      };
-      setMessages(prev => [...prev, newMessage]);
+      if (data && data.message && data.sender) {
+        const newMessage: Message = {
+          id: Date.now().toString(),
+          message: data.message,
+          sender: data.sender,
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          isOwnMessage: false, // We'll determine this when we have the current user context
+          isSystemMessage: false
+        };
+        setMessages(prev => [...prev, newMessage]);
+      }
     });
 
     // Listen for user leave events
     socket.on('userLeft', (data: { username: string, room: string }) => {
-      const leaveMessage: Message = {
-        id: Date.now().toString(),
-        message: `user ${data.username} has left room ${data.room}`,
-        sender: data.username,
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        isOwnMessage: false,
-        isUserLeft: true
-      };
-      setMessages(prev => [...prev, leaveMessage]);
+      if (data && data.username && data.room) {
+        const leaveMessage: Message = {
+          id: Date.now().toString(),
+          message: `user ${data.username} has left room ${data.room}`,
+          sender: data.username,
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          isOwnMessage: false,
+          isUserLeft: true
+        };
+        setMessages(prev => [...prev, leaveMessage]);
+      }
     });
 
     // Listen for new messages
     socket.on('newMessage', (data: { message: string, sender: string, room: string }) => {
-      const newMessage: Message = {
-        id: Date.now().toString(),
-        message: data.message,
-        sender: data.sender,
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        isOwnMessage: false,
-        isSystemMessage: false
-      };
-      setMessages(prev => [...prev, newMessage]);
+      if (data && data.message && data.sender) {
+        const newMessage: Message = {
+          id: Date.now().toString(),
+          message: data.message,
+          sender: data.sender,
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          isOwnMessage: false,
+          isSystemMessage: false
+        };
+        setMessages(prev => [...prev, newMessage]);
+      }
     });
 
     // Cleanup function to remove event listeners
